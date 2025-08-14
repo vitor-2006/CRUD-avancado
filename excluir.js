@@ -28,9 +28,15 @@ async function excluir() {
         // If a matching contact is found (index is not -1)
         if (index !== -1) {
             // Use the index to remove the contact
-            const removedContato = contatos.splice(index, 1);
-            console.log(`Contato "${removedContato[0].nome}" removido com sucesso!!\n`);
-            break; // Exit the loop on success
+            const confirm = await askQuestion('Tem certeza que quer remover o usuário? (s/n): ')
+            if(confirm.toLowerCase() === 's'){
+                const removedContato = contatos.splice(index, 1);
+                console.log(`Contato "${removedContato[0].nome}" removido com sucesso!!\n`);
+                break; // Exit the loop on success
+            }else{
+                console.log('usuário não foi removido!')
+                break
+            }
         } else {
             console.log('ID inválido! Por favor, digite um ID válido.');
         }
