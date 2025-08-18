@@ -13,7 +13,6 @@ async function excluir() {
         console.log('Contatos disponíveis: ');
         contatos.forEach((contato, index) => {
             console.log(`${index + 1}. \nID: ${contato.id} \nNome: ${contato.nome} \nE-mail: ${contato.email}`);
-            // Correctly display the telephone array
             contato.telefone.forEach((tel, i) => {
                 console.log(`Telefone #${i + 1}: ${tel}`);
             });
@@ -22,17 +21,17 @@ async function excluir() {
 
         const input = await askQuestion('Escolha o ID do usuário que deseja remover: ');
 
-        // Find the index of the contact with the matching ID
+        // vê se o index é compatível com algum elemento da array
         const index = contatos.findIndex(contato => contato.id == input);
 
-        // If a matching contact is found (index is not -1)
+        // vê se teve algum elemento compatível (index não é -1)
         if (index !== -1) {
-            // Use the index to remove the contact
+            // usa o index para remover o usuário
             const confirm = await askQuestion('Tem certeza que quer remover o usuário? (s/n): ')
             if(confirm.toLowerCase() === 's'){
                 const removedContato = contatos.splice(index, 1);
                 console.log(`Contato "${removedContato[0].nome}" removido com sucesso!!\n`);
-                break; // Exit the loop on success
+                break;
             }else{
                 console.log('usuário não foi removido!')
                 break

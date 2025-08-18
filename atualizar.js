@@ -12,7 +12,6 @@ async function atualizar() {
 
         console.log('==== Atualizar Contato ====\n');
         contatos.forEach((contato, index) => {
-            // Updated to print telephone array correctly
             console.log(`${index + 1}. \nID: ${contato.id} \nNome: ${contato.nome} \nE-mail: ${contato.email}`);
             contato.telefone.forEach((tel, i) => {
                 console.log(`Telefone #${i + 1}: ${tel}`);
@@ -20,26 +19,33 @@ async function atualizar() {
             console.log('');
         });
 
-        const input = await askQuestion('Digite o id do contato que você quer editar: ');
+        const input = await askQuestion('Digite o ID do contato que você quer editar: ');
         const index = contatos.findIndex(contato => contato.id == input);
 
         if (index !== -1) {
             console.log(`\nEditando contato de ${contatos[index].nome}...`);
-            
-            const nome = await askQuestion('Digite o novo nome: ');
-            let email = await askQuestion('Digite o novo e-mail: ');
-            
-            // Check for duplicate emails, excluding the current contact being edited
-            while (contatos.some((contato, i) => contato.email === email && i !== index)) {
-                console.log('E-mail já utilizado! Tente novamente.');
-                email = await askQuestion('Digite o novo e-mail: ');
+
+            // Check if user wants to update the name
+            const editName = await askQuestion('Deseja editar o nome? (s/n): ');
+            if (editName.toLowerCase() === 's') {
+                const nome = await askQuestion('Digite o novo nome: ');
+                contatos[index].nome = nome;
             }
-            
-            // Update the contact object.
-            contatos[index].nome = nome;
-            contatos[index].email = email;
-            
-            // Update the telefone array. You will need to write the `telefone()` function separately.
+
+            // Check if user wants to update the email
+            const editEmail = await askQuestion('Deseja editar o e-mail? (s/n): ');
+            if (editEmail.toLowerCase() === 's') {
+                let email = await askQuestion('Digite o novo e-mail: ');
+                
+                // Check if the email is already in use by another contact
+                while (contatos.some((contato, i) => contato.email === email && i !== index)) {
+                    console.log('E-mail já utilizado! Tente novamente.');
+                    email = await askQuestion('Digite o novo e-mail: ');
+                }
+                contatos[index].email = email;
+            }
+
+            // Call the telefone function to manage phones
             await telefone(index);
 
             console.log(`Contato de ${contatos[index].nome} editado com sucesso!`);
